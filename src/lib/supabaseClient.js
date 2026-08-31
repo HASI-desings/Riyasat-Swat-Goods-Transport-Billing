@@ -14,7 +14,13 @@ export const credentialsMissing = !url || !anonKey;
 export const supabase = credentialsMissing
   ? null
   : createClient(url, anonKey, {
-      auth: { persistSession: true },
+      auth: {
+        persistSession: true, // keep the session in this browser across reloads
+        autoRefreshToken: true, // silently renew the token so the session doesn't expire mid-use
+        storage: window.localStorage, // survives closing the tab/app, tied to this device
+        storageKey: 'rsgt-auth', // stable key so a rebuild/redeploy doesn't orphan the saved session
+        detectSessionInUrl: false,
+      },
     });
 
 export async function checkSupabaseConnection() {
