@@ -7,7 +7,7 @@ export default function SubstancePresetSelect({ value, onChange, presets }) {
   if (customMode) {
     return (
       <div className="field">
-        <label>Substance Type</label>
+        <label>Substance Type <span className="ur">/ مال کی قسم</span></label>
         <input
           type="text"
           autoFocus
@@ -22,7 +22,7 @@ export default function SubstancePresetSelect({ value, onChange, presets }) {
 
   return (
     <div className="field">
-      <label>Substance Type</label>
+      <label>Substance Type <span className="ur">/ مال کی قسم</span></label>
       <select
         value={presets.includes(value) ? value : ''}
         onChange={(e) => {
