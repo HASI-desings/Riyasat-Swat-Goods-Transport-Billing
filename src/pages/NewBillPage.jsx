@@ -30,6 +30,14 @@ export default function NewBillPage({ branch }) {
   }
 
   async function handleSave() {
+    // On mobile, tapping Save while a text field is still focused can just
+    // dismiss the keyboard on the first tap (the click never fires) — the
+    // page then looks like it "loaded and stopped" until a second tap.
+    // Blurring any focused field first means one tap reliably saves.
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
+
     if (!branch) {
       setError('Select a branch first (see the picker, or go to Settings).');
       return;
@@ -85,7 +93,20 @@ export default function NewBillPage({ branch }) {
         <div className="sticky-col" style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
           {calc && <AmountSummary calc={calc} />}
 
-          <button className="btn btn-primary btn-block" disabled={!readyToSave || saving} onClick={handleSave}>
+          <button
+            className="btn btn-primary btn-block"
+            type="button"
+            disabled={!readyToSave || saving}
+            onPointerDown={() => {
+              // Blur on touch-down (not click) so the keyboard collapses and
+              // the layout settles BEFORE the tap is released — otherwise the
+              // button can shift position mid-tap and swallow the first press.
+              if (document.activeElement instanceof HTMLElement) {
+                document.activeElement.blur();
+              }
+            }}
+            onClick={handleSave}
+          >
             {saving ? 'Saving…' : 'Save & Preview Slip'}
           </button>
         </div>
