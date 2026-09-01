@@ -240,9 +240,21 @@ button, .tap-target { min-height: 44px; }
 
 .slip { background: var(--paper); color: #1b1f27; border-radius: var(--radius-md); padding: 22px; font-family: "SF Pro Text", -apple-system, system-ui, sans-serif; }
 .slip-header { text-align: center; border-bottom: 2px solid #1b1f27; padding-bottom: 10px; margin-bottom: 14px; }
-.slip-header .company { font-size: 1.2rem; font-weight: 800; letter-spacing: -0.01em; }
-.slip-header .branch { font-size: 0.75rem; font-weight: 600; color: var(--amber-600); margin-top: 2px; }
-.slip-header .tagline { font-size: 0.68rem; color: #6b7280; margin-top: 2px; }
+
+/* Urdu text: RTL, dedicated nastaliq font */
+.ur { font-family: "Noto Nastaliq Urdu", serif; direction: rtl; unicode-bidi: embed; }
+
+.slip-header .company { font-size: 1.15rem; font-weight: 800; letter-spacing: -0.01em; color: #1b3a5c; }
+.slip-header .company-ur { display: block; font-size: 1.05rem; margin-top: 2px; color: #1b3a5c; }
+.slip-header .hq-contacts { margin-top: 6px; font-size: 0.76rem; line-height: 1.5; }
+.slip-header .contact-name { color: #1b3a5c; font-weight: 700; }
+.slip-header .contact-num { color: #b5501a; font-weight: 700; font-variant-numeric: tabular-nums; }
+.slip-header .branch-offices { display: flex; justify-content: space-between; gap: 10px; margin-top: 8px; padding-top: 8px; border-top: 1px dashed #c7cdd6; font-size: 0.72rem; text-align: left; }
+.slip-header .branch-office { flex: 1; }
+.slip-header .office-label { color: #2e7d5b; font-weight: 700; }
+.slip-header .branch { font-size: 0.72rem; font-weight: 600; color: var(--amber-600); margin-top: 8px; }
+.slip-header .tagline { font-size: 0.66rem; color: #6b7280; margin-top: 2px; }
+.slip-footer .footer-note { margin-top: 8px; font-size: 0.72rem; line-height: 1.9; color: #4b5563; text-align: center; }
 .slip-meta { display: flex; justify-content: space-between; font-size: 0.78rem; margin-bottom: 10px; color: #374151; }
 .slip-parties { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.85rem; margin-bottom: 12px; }
 .slip-parties .label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.05em; color: #6b7280; font-weight: 700; }
