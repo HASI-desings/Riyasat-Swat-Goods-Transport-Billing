@@ -59,7 +59,7 @@ export default function BillForm({ branchId, presets, customers, onSaveCustomer,
       <div className="section-title">New Bill</div>
 
       <div className="field">
-        <label>Date</label>
+        <label>Date <span className="ur">/ تاریخ</span></label>
         <input type="date" value={bill.date} onChange={(e) => update('date', e.target.value)} />
       </div>
 
@@ -71,39 +71,39 @@ export default function BillForm({ branchId, presets, customers, onSaveCustomer,
       />
 
       <div className="field">
-        <label>Sender Phone (optional)</label>
+        <label>Sender Phone (optional) <span className="ur">/ بھیجنے والے کا نمبر</span></label>
         <input type="tel" value={bill.senderPhone} placeholder="03xx-xxxxxxx" onChange={(e) => update('senderPhone', e.target.value)} />
       </div>
 
       <div className="field">
-        <label>Receiver Name</label>
+        <label>Receiver Name <span className="ur">/ وصول کنندہ کا نام</span></label>
         <input type="text" value={bill.receiverName} placeholder="e.g. Khan Traders" onChange={(e) => update('receiverName', e.target.value)} />
       </div>
 
       <div className="field">
-        <label>Receiver Phone (optional)</label>
+        <label>Receiver Phone (optional) <span className="ur">/ وصول کنندہ کا نمبر</span></label>
         <input type="tel" value={bill.receiverPhone} placeholder="03xx-xxxxxxx" onChange={(e) => update('receiverPhone', e.target.value)} />
       </div>
 
       <div className="field">
-        <label>Destination</label>
+        <label>Destination <span className="ur">/ منزل</span></label>
         <input type="text" value={bill.destination} placeholder="e.g. Mingora, Swat" onChange={(e) => update('destination', e.target.value)} />
       </div>
 
       <SubstancePresetSelect value={bill.substanceType} onChange={(v) => update('substanceType', v)} presets={presets} />
 
       <div className="field">
-        <label>Weight / Volume per piece (optional)</label>
+        <label>Weight / Volume per piece (optional) <span className="ur">/ وزن</span></label>
         <input type="text" value={bill.weightOrVolume} placeholder="e.g. 50kg" onChange={(e) => update('weightOrVolume', e.target.value)} />
       </div>
 
       <div className="field-row">
         <div className="field">
-          <label>Piece Count</label>
+          <label>Piece Count <span className="ur">/ تعداد</span></label>
           <input type="number" inputMode="numeric" min="0" value={bill.pieceCount} onChange={(e) => update('pieceCount', e.target.value)} />
         </div>
         <div className="field">
-          <label>Rate per Piece</label>
+          <label>Rate per Piece <span className="ur">/ کرایہ فی پیس</span></label>
           <input type="number" inputMode="decimal" min="0" value={bill.ratePerPiece} onChange={(e) => handleRateTyping(e.target.value)} />
         </div>
       </div>
@@ -118,7 +118,7 @@ export default function BillForm({ branchId, presets, customers, onSaveCustomer,
             style={{ overflow: 'hidden' }}
           >
             <div className="field">
-              <label>Discounted Rate (optional)</label>
+              <label>Discounted Rate (optional) <span className="ur">/ رعایتی کرایہ</span></label>
               <input
                 type="number"
                 inputMode="decimal"
@@ -132,15 +132,15 @@ export default function BillForm({ branchId, presets, customers, onSaveCustomer,
         )}
       </AnimatePresence>
 
-      <ManualAmountField label="Toll Tax (manual, per bill)" value={bill.tollTax} onChange={(v) => update('tollTax', v)} />
-      <ManualAmountField label="Company Commission (manual, per bill)" value={bill.companyCommission} onChange={(v) => update('companyCommission', v)} />
+      <ManualAmountField label={<>Toll Tax (manual, per bill) <span className="ur">/ ٹول ٹیکس</span></>} value={bill.tollTax} onChange={(v) => update('tollTax', v)} />
+      <ManualAmountField label={<>Company Commission (manual, per bill) <span className="ur">/ کمپنی کمیشن</span></>} value={bill.companyCommission} onChange={(v) => update('companyCommission', v)} />
 
       <div className="field">
-        <label>Labour Cost</label>
+        <label>Labour Cost <span className="ur">/ مزدوری</span></label>
         <input type="number" inputMode="decimal" min="0" value={bill.labourCost} onChange={(e) => update('labourCost', e.target.value)} />
       </div>
 
-      <ManualAmountField label="Kharcha (optional)" value={bill.kharcha} onChange={(v) => update('kharcha', v)} />
+      <ManualAmountField label={<>Kharcha (optional) <span className="ur">/ خرچہ</span></>} value={bill.kharcha} onChange={(v) => update('kharcha', v)} />
     </div>
   );
 }
