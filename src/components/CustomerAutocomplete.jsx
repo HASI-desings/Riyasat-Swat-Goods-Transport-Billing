@@ -16,7 +16,7 @@ export default function CustomerAutocomplete({ value, onChange, customers, onSav
 
   return (
     <div className="field" style={{ position: 'relative' }}>
-      <label>Sender Name</label>
+      <label>Sender Name <span className="ur">/ بھیجنے والے کا نام</span></label>
       <input
         type="text"
         value={value}
