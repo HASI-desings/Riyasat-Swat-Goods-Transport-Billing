@@ -4,6 +4,7 @@
 // the reverse flow of our own outgoing bills.
 import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
+import { withTimeout } from '../lib/withTimeout';
 
 function toRow(d) {
   return {
@@ -67,14 +68,18 @@ export function useDeliveries() {
   }, [refresh]);
 
   const addDelivery = useCallback(async (delivery) => {
-    const { data, error: err } = await supabase
-      .from('deliveries')
-      .insert(toRow(delivery))
-      .select()
-      .single();
-    if (err) return { ok: false, reason: "Couldn't save — check your connection and try again.", detail: err.message };
-    await refresh();
-    return { ok: true, delivery: fromRow(data) };
+    try {
+      const { data, error: err } = await withTimeout(
+        supabase.from('deliveries').insert(toRow(delivery)).select().single()
+      );
+      if (err) return { ok: false, reason: "Couldn't save — check your connection and try again.", detail: err.message };
+      // The insert already succeeded — that's the save. Refresh the list
+      // in the background so the button never waits on a second request.
+      refresh();
+      return { ok: true, delivery: fromRow(data) };
+    } catch (err) {
+      return { ok: false, reason: "Couldn't save — check your connection and try again.", detail: err.message };
+    }
   }, [refresh]);
 
   const markDelivered = useCallback(async (id) => {
