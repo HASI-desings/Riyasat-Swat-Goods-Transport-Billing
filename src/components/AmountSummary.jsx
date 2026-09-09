@@ -14,7 +14,7 @@ export default function AmountSummary({ calc }) {
           <div className="row"><span>Toll Tax <span className="ur">/ ٹول ٹیکس</span></span><span>{formatPKR(calc.tollTax)}</span></div>
         )}
         {calc.companyCommission !== null && (
-          <div className="row"><span>Company Commission <span className="ur">/ کمپنی کمیشن</span></span><span>{formatPKR(calc.companyCommission)}</span></div>
+          <div className="row"><span>Advance <span className="ur">/ پیشگی</span></span><span>{formatPKR(calc.companyCommission)}</span></div>
         )}
         <div className="row"><span>Labour Cost <span className="ur">/ مزدوری</span></span><span>{formatPKR(calc.labourCost)}</span></div>
         {calc.kharcha !== null && (
