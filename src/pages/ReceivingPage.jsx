@@ -28,10 +28,15 @@ export default function ReceivingPage() {
 
   async function handleAdd(delivery) {
     setSubmitting(true);
-    const res = await addDelivery(delivery);
-    setSubmitting(false);
-    if (res.ok) setTab('inventory');
-    return res;
+    try {
+      const res = await addDelivery(delivery);
+      if (res.ok) setTab('inventory');
+      return res;
+    } finally {
+      // Always clears, even on an unexpected error — the button must
+      // never get stuck on "Saving…" with no way forward.
+      setSubmitting(false);
+    }
   }
 
   return (
