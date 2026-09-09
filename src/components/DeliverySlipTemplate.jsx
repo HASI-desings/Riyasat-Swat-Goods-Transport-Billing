@@ -4,44 +4,55 @@
 import React, { forwardRef } from 'react';
 import { formatPKR } from '../lib/calculateTotal';
 
+// <bdi> (bidirectional isolate) keeps the Urdu text from reordering the
+// English/number characters sitting right next to it — without it, a
+// date or number placed beside RTL Urdu text can visually scramble
+// (digits jumping position, words swapping order).
 function Bilingual({ en, ur }) {
   return (
     <>
-      {en} <span className="ur">/ {ur}</span>
+      {en} / <bdi className="ur">{ur}</bdi>
     </>
   );
 }
 
 const DeliverySlipTemplate = forwardRef(function DeliverySlipTemplate({ delivery }, ref) {
   const hasWeight = notBlank(delivery.weightOrVolume);
-  const hasAmount = notBlank(delivery.amount);
+  const hasCost = notBlank(delivery.cost);
+  const hasGodamCharges = notBlank(delivery.godamCharges);
+  const hasLabourCost = notBlank(delivery.labourCost);
   const hasSenderPhone = notBlank(delivery.senderPhone);
   const hasOriginCity = notBlank(delivery.originCity);
   const hasSourceCompany = notBlank(delivery.sourceCompany);
   const hasOriginalBillNumber = notBlank(delivery.originalBillNumber);
   const hasNotes = notBlank(delivery.notes);
 
+  const totalDeclared =
+    (hasCost ? Number(delivery.cost) : 0) +
+    (hasGodamCharges ? Number(delivery.godamCharges) : 0) +
+    (hasLabourCost ? Number(delivery.labourCost) : 0);
+
   return (
     <div className="slip" ref={ref}>
       <div className="slip-header">
         <div className="company">
           Riyasat Swat Goods Transport Company
-          <span className="ur company-ur"> — ریاست سوات گڈز ٹرانسپورٹ کمپنی</span>
+          <bdi className="ur company-ur"> — ریاست سوات گڈز ٹرانسپورٹ کمپنی</bdi>
         </div>
 
         <div className="hq-contacts">
-          <span className="contact-name">Muhammad Numan</span> <span className="contact-num">+92 326 6406600</span>
-          <br />
           <span className="contact-name">Rana Shahid</span> <span className="contact-num">0344-4595510</span> ·{' '}
           <span className="contact-num">0321-4138059</span>
           <br />
           <span className="contact-name">Rana Jahanzaib</span> <span className="contact-num">0300-4768995</span>
+          <br />
+          <span className="contact-name">Muhammad Numan</span> <span className="contact-num">+92 326 6406600</span>
         </div>
 
         <div className="branch" style={{ marginTop: 8 }}>
           <Bilingual en="Received Delivery" ur="موصول شدہ مال" />
         </div>
-        <div className="tagline">Lahore to Swat &amp; Beyond</div>
+        <div className="tagline">Swat to Lahore &amp; Beyond</div>
       </div>
 
       <div className="slip-meta">
@@ -107,25 +118,46 @@ const DeliverySlipTemplate = forwardRef(function DeliverySlipTemplate({ delivery
             <td><Bilingual en="Pieces" ur="تعداد" /></td>
             <td>{delivery.pieceCount}</td>
           </tr>
-          {hasAmount && (
+          {hasCost && (
             <tr>
-              <td><Bilingual en="Declared Amount" ur="رقم" /></td>
-              <td>{formatPKR(delivery.amount)}</td>
+              <td><Bilingual en="Cost" ur="کرایہ" /></td>
+              <td>{formatPKR(delivery.cost)}</td>
+            </tr>
+          )}
+          {hasGodamCharges && (
+            <tr>
+              <td><Bilingual en="Godam Charges" ur="گودام چارجز" /></td>
+              <td>{formatPKR(delivery.godamCharges)}</td>
+            </tr>
+          )}
+          {hasLabourCost && (
+            <tr>
+              <td><Bilingual en="Labour" ur="مزدوری" /></td>
+              <td>{formatPKR(delivery.labourCost)}</td>
             </tr>
           )}
         </tbody>
       </table>
 
+      {(hasCost || hasGodamCharges || hasLabourCost) && (
+        <div className="slip-total">
+          <span className="label"><Bilingual en="Total Declared Amount" ur="کل مقررہ رقم" /></span>
+          <span className="value">{formatPKR(totalDeclared)}</span>
+        </div>
+      )}
+
       {hasNotes && (
-        <div style={{ fontSize: '0.82rem', color: '#4b5563', marginBottom: 10 }}>
-          <span className="ur">نوٹ / </span>{delivery.notes}
+        <div style={{ fontSize: '0.82rem', color: '#4b5563', marginTop: 10 }}>
+          <bdi className="ur">نوٹ / </bdi>{delivery.notes}
         </div>
       )}
 
       <div className="slip-footer">
         <div>Riyasat Swat Goods Transport — Receiving Record</div>
-        <div className="ur footer-note">
-          یہ مال {delivery.receiverName} کے نام موصول ہوا ہے۔ برائے کرم رابطہ نمبر پر کال کر کے مال وصول کرنے کی اطلاع دیں۔
+        <div className="footer-note">
+          <bdi className="ur">
+            یہ مال {delivery.receiverName} کے نام موصول ہوا ہے۔ برائے کرم رابطہ نمبر پر کال کر کے مال وصول کرنے کی اطلاع دیں۔
+          </bdi>
         </div>
       </div>
     </div>
