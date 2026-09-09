@@ -3,7 +3,7 @@
 // (rules.md-equivalent for this module) so nothing gets lost: sender,
 // receiver + phone (required — this is who gets called), substance,
 // weight, pieces, and the declared amount from the original bilty.
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import SubstancePresetSelect from './SubstancePresetSelect';
 
 const emptyDelivery = {
@@ -26,6 +26,8 @@ const emptyDelivery = {
 
 export default function DeliveryForm({ presets, onSubmit, submitting }) {
   const [d, setD] = useState(emptyDelivery);
+  const [validationError, setValidationError] = useState(null);
+  const handledRef = useRef(false);
 
   function update(field, value) {
     setD((prev) => ({ ...prev, [field]: value }));
@@ -33,20 +35,41 @@ export default function DeliveryForm({ presets, onSubmit, submitting }) {
 
   const readyToSave = d.receiverName && d.receiverPhone && d.substanceType && d.pieceCount;
 
-  async function handleSubmit() {
-    // Same mobile keyboard-focus issue as the New Bill save button: tapping
-    // Save while a field is still focused can just dismiss the keyboard on
-    // the first tap. Blurring first means one tap reliably saves.
-    if (document.activeElement instanceof HTMLElement) {
-      document.activeElement.blur();
+  async function handleSubmit(e) {
+    // Guard against the touchend + click firing twice for the same tap.
+    if (e) e.preventDefault();
+    if (handledRef.current || submitting) return;
+    handledRef.current = true;
+
+    try {
+      // The button is intentionally NEVER disabled (see button below) — a
+      // disabled element receives no touch/pointer events at all, which is
+      // what caused the double-tap bug: the first tap on a disabled button
+      // does nothing but blur the keyboard, and only the resulting re-render
+      // enables the button for a second tap to actually work. Validating
+      // here instead keeps every tap "live".
+      if (!readyToSave) {
+        setValidationError('Fill in Receiver Name, Receiver Phone, Substance, and Piece Count first.');
+        return;
+      }
+      setValidationError(null);
+
+      if (document.activeElement instanceof HTMLElement) {
+        document.activeElement.blur();
+      }
+
+      const res = await onSubmit(d);
+      if (res?.ok) setD(emptyDelivery);
+    } finally {
+      handledRef.current = false;
     }
-    const res = await onSubmit(d);
-    if (res?.ok) setD(emptyDelivery);
   }
 
   return (
     <div className="card">
       <div className="section-title">Log Received Delivery <bdi className="ur">/ موصول شدہ مال درج کریں</bdi></div>
+
+      {validationError && <div className="banner banner-error">{validationError}</div>}
 
       <div className="field">
         <label>Date Received <bdi className="ur">/ موصولہ تاریخ</bdi></label>
@@ -128,14 +151,8 @@ export default function DeliveryForm({ presets, onSubmit, submitting }) {
       <button
         className="btn btn-primary btn-block"
         type="button"
-        disabled={!readyToSave || submitting}
-        onPointerDown={() => {
-          // Fires BEFORE the click, early enough to beat the keyboard's
-          // dismiss gesture — the actual root cause of the double-tap bug.
-          if (document.activeElement instanceof HTMLElement) {
-            document.activeElement.blur();
-          }
-        }}
+        style={{ opacity: submitting ? 0.7 : 1 }}
+        onTouchEnd={handleSubmit}
         onClick={handleSubmit}
       >
         {submitting ? 'Saving…' : 'Add to Inventory'}
