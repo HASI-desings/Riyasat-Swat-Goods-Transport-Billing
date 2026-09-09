@@ -14,7 +14,7 @@ import { branches } from '../data/defaultPresets';
 function Bilingual({ en, ur }) {
   return (
     <>
-      {en} <span className="ur">/ {ur}</span>
+      {en} / <bdi className="ur">{ur}</bdi>
     </>
   );
 }
@@ -34,28 +34,28 @@ const SlipTemplate = forwardRef(function SlipTemplate({ bill }, ref) {
       <div className="slip-header">
         <div className="company">
           Riyasat Swat Goods Transport Company
-          <span className="ur company-ur"> — ریاست سوات گڈز ٹرانسپورٹ کمپنی</span>
+          <bdi className="ur company-ur"> — ریاست سوات گڈز ٹرانسپورٹ کمپنی</bdi>
         </div>
 
         <div className="hq-contacts">
-          <span className="contact-name">Muhammad Numan</span> <span className="contact-num">+92 326 6406600</span>
-          <br />
           <span className="contact-name">Rana Shahid</span> <span className="contact-num">0344-4595510</span> ·{' '}
           <span className="contact-num">0321-4138059</span>
           <br />
           <span className="contact-name">Rana Jahanzaib</span> <span className="contact-num">0300-4768995</span>
+          <br />
+          <span className="contact-name">Muhammad Numan</span> <span className="contact-num">+92 326 6406600</span>
         </div>
 
         <div className="branch-offices">
           <div className="branch-office">
-            <span className="office-label">Branch Office <span className="ur">/ برانچ آفس</span>:</span>{' '}
-            Shalmi Chowk <span className="ur">/ شالمی چوک</span>
+            <span className="office-label">Branch Office <bdi className="ur">/ برانچ آفس</bdi>:</span>{' '}
+            Shalmi Chowk <bdi className="ur">/ شالمی چوک</bdi>
             <br />
             <span className="contact-name">Majid Sulehri</span> <span className="contact-num">0345-2528125</span>
           </div>
           <div className="branch-office">
-            <span className="office-label">Delivery Office <span className="ur">/ ڈیلیوری آفس</span>:</span>{' '}
-            32 Chowk <span className="ur">/ 32 چوک</span>
+            <span className="office-label">Delivery Office <bdi className="ur">/ ڈیلیوری آفس</bdi>:</span>{' '}
+            32 Chowk <bdi className="ur">/ 32 چوک</bdi>
             <br />
             <span className="contact-num">0310-4595510</span>
           </div>
@@ -157,10 +157,10 @@ const SlipTemplate = forwardRef(function SlipTemplate({ bill }, ref) {
 
       <div className="slip-footer">
         <div>Thank you for trusting Riyasat Swat Goods Transport.</div>
-        <div className="ur footer-note">
+        <div className="footer-note"><bdi className="ur">
           نوٹ: ہر قسم کے مال کی بلٹی آف انٹری ضروری ہے۔ اگر کسی پارٹی نے مقررہ وقت پر مال وصول نہ کیا تو وہ خود ذمہ دار ہوگا۔
           رسید ہذا اجراء کے 15 دن بعد تک مال نہ آنے کی صورت میں، مال چھوٹ جانے کی جو بھی شکایت ہو 15 دن تک اندراج کروا لیں۔
-        </div>
+        </bdi></div>
       </div>
     </div>
   );
