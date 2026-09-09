@@ -133,7 +133,7 @@ export default function BillForm({ branchId, presets, customers, onSaveCustomer,
       </AnimatePresence>
 
       <ManualAmountField label={<>Toll Tax (manual, per bill) <span className="ur">/ ٹول ٹیکس</span></>} value={bill.tollTax} onChange={(v) => update('tollTax', v)} />
-      <ManualAmountField label={<>Company Commission (manual, per bill) <span className="ur">/ کمپنی کمیشن</span></>} value={bill.companyCommission} onChange={(v) => update('companyCommission', v)} />
+      <ManualAmountField label={<>Advance (manual, per bill) <span className="ur">/ پیشگی</span></>} value={bill.companyCommission} onChange={(v) => update('companyCommission', v)} />
 
       <div className="field">
         <label>Labour Cost <span className="ur">/ مزدوری</span></label>
