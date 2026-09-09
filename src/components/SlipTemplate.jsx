@@ -38,6 +38,8 @@ const SlipTemplate = forwardRef(function SlipTemplate({ bill }, ref) {
         </div>
 
         <div className="hq-contacts">
+          <span className="contact-name">Muhammad Numan</span> <span className="contact-num">+92 326 6406600</span>
+          <br />
           <span className="contact-name">Rana Shahid</span> <span className="contact-num">0344-4595510</span> ·{' '}
           <span className="contact-num">0321-4138059</span>
           <br />
@@ -131,7 +133,7 @@ const SlipTemplate = forwardRef(function SlipTemplate({ bill }, ref) {
           )}
           {hasCommission && (
             <tr>
-              <td><Bilingual en="Company Commission" ur="کمپنی کمیشن" /></td>
+              <td><Bilingual en="Advance" ur="پیشگی" /></td>
               <td>{formatPKR(bill.companyCommission)}</td>
             </tr>
           )}
