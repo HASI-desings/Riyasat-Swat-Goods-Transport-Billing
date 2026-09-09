@@ -5,6 +5,7 @@ import { useCallback, useEffect, useState } from 'react';
 import { supabase } from '../lib/supabaseClient';
 import { offlineQueue } from '../lib/storage';
 import { reserveNextBillNumber } from '../lib/billNumber';
+import { withTimeout } from '../lib/withTimeout';
 
 function toRow(bill) {
   return {
@@ -111,31 +112,29 @@ export function useBills() {
     let billNumber = billWithoutNumber.billNumber;
     try {
       if (!billNumber) {
-        billNumber = await reserveNextBillNumber();
+        billNumber = await withTimeout(reserveNextBillNumber());
       }
       const bill = { ...billWithoutNumber, billNumber };
-      const { data: inserted, error: err } = await supabase
-        .from('bills')
-        .insert(toRow(bill))
-        .select()
-        .single();
+      const { data: inserted, error: err } = await withTimeout(
+        supabase.from('bills').insert(toRow(bill)).select().single()
+      );
       if (err) {
         // Duplicate bill number race — retry once with a fresh number.
         if (err.code === '23505') {
-          const retryNumber = await reserveNextBillNumber();
+          const retryNumber = await withTimeout(reserveNextBillNumber());
           const retryBill = { ...bill, billNumber: retryNumber };
-          const { data: retryInserted, error: err2 } = await supabase
-            .from('bills')
-            .insert(toRow(retryBill))
-            .select()
-            .single();
+          const { data: retryInserted, error: err2 } = await withTimeout(
+            supabase.from('bills').insert(toRow(retryBill)).select().single()
+          );
           if (err2) throw err2;
-          await refresh();
+          // The insert already succeeded — that's the save. Refresh the
+          // list in the background; don't make the button wait on it.
+          refresh();
           return { ok: true, bill: fromRow(retryInserted) };
         }
         throw err;
       }
-      await refresh();
+      refresh();
       return { ok: true, bill: fromRow(inserted) };
     } catch (err) {
       // Network/Supabase failure — never lose the admin's typed data.
