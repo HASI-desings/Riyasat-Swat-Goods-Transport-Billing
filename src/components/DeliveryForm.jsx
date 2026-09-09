@@ -32,6 +32,12 @@ export default function DeliveryForm({ presets, onSubmit, submitting }) {
   const readyToSave = d.receiverName && d.receiverPhone && d.substanceType && d.pieceCount;
 
   async function handleSubmit() {
+    // Same mobile keyboard-focus issue as the New Bill save button: tapping
+    // Save while a field is still focused can just dismiss the keyboard on
+    // the first tap. Blurring first means one tap reliably saves.
+    if (document.activeElement instanceof HTMLElement) {
+      document.activeElement.blur();
+    }
     const res = await onSubmit(d);
     if (res?.ok) setD(emptyDelivery);
   }
