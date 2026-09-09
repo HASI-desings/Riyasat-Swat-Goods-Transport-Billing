@@ -10,6 +10,7 @@ import SlipPreviewPage from './pages/SlipPreviewPage';
 import SavedCustomersPage from './pages/SavedCustomersPage';
 import BillHistoryPage from './pages/BillHistoryPage';
 import SettingsPage from './pages/SettingsPage';
+import ReceivingPage from './pages/ReceivingPage';
 
 const ICONS = {
   bill: (
@@ -37,6 +38,14 @@ const ICONS = {
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
       <circle cx="12" cy="12" r="3" />
       <path d="M19.4 15a1.7 1.7 0 0 0 .3 1.9l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.9-.3 1.7 1.7 0 0 0-1 1.6V21a2 2 0 1 1-4 0v-.2a1.7 1.7 0 0 0-1-1.6 1.7 1.7 0 0 0-1.9.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.9 1.7 1.7 0 0 0-1.6-1H3a2 2 0 1 1 0-4h.2a1.7 1.7 0 0 0 1.6-1 1.7 1.7 0 0 0-.3-1.9l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.9.3H9a1.7 1.7 0 0 0 1-1.6V3a2 2 0 1 1 4 0v.2a1.7 1.7 0 0 0 1 1.6 1.7 1.7 0 0 0 1.9-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.9V9a1.7 1.7 0 0 0 1.6 1H21a2 2 0 1 1 0 4h-.2a1.7 1.7 0 0 0-1.6 1z" />
+    </svg>
+  ),
+  receiving: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+      <path d="M21 8 12 3 3 8" />
+      <path d="M21 8v8l-9 5-9-5V8" />
+      <path d="M3 8l9 5 9-5" />
+      <path d="M12 13v8" />
     </svg>
   ),
 };
@@ -95,6 +104,7 @@ export default function App() {
             <Route path="/customers" element={<SavedCustomersPage />} />
             <Route path="/history" element={<BillHistoryPage branch={branch} />} />
             <Route path="/settings" element={<SettingsPage branches={branches} selectBranch={selectBranch} currentBranchId={branch?.id} />} />
+            <Route path="/receiving" element={<ReceivingPage />} />
           </Routes>
         </AnimatePresence>
       </main>
@@ -111,6 +121,10 @@ export default function App() {
         <NavLink to="/history" className={({ isActive }) => `tab-item${isActive ? ' active' : ''}`}>
           {ICONS.history}
           History
+        </NavLink>
+        <NavLink to="/receiving" className={({ isActive }) => `tab-item${isActive ? ' active' : ''}`}>
+          {ICONS.receiving}
+          Receiving
         </NavLink>
         <NavLink to="/settings" className={({ isActive }) => `tab-item${isActive ? ' active' : ''}`}>
           {ICONS.settings}
