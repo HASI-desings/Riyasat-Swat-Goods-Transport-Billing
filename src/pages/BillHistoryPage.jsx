@@ -30,7 +30,7 @@ export default function BillHistoryPage() {
       {!loading && results.length === 0 && <div className="empty-state">No matching bills found.</div>}
 
       {results.map((b) => (
-        <Link key={b.id} to={`/preview/${b.id}`} state={{ bill: b }} className="list-item" style={{ textDecoration: 'none', color: 'inherit' }}>
+        <Link key={b.id} to={`/preview/${b.id}`} state={{ bill: b, from: 'history' }} className="list-item" style={{ textDecoration: 'none', color: 'inherit' }}>
           <div>
             <div className="title">{formatBillNumber(b.billNumber)} · {b.senderName} → {b.receiverName}</div>
             <div className="subtitle">{b.destination} · {b.substanceType} · {b.date}</div>
