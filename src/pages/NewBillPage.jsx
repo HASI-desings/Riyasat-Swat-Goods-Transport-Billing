@@ -45,18 +45,25 @@ export default function NewBillPage({ branch }) {
     setSaving(true);
     setError(null);
 
-    const existing = findByName(bill.senderName);
-    if (existing) bumpUsage(existing.id);
+    try {
+      const existing = findByName(bill.senderName);
+      if (existing) bumpUsage(existing.id);
 
-    const fullBill = { ...bill, ...calc, branchId: branch.id };
-    const res = await saveBill(fullBill);
-    setSaving(false);
+      const fullBill = { ...bill, ...calc, branchId: branch.id };
+      const res = await saveBill(fullBill);
 
-    if (res.ok) {
-      draftStorage.clear();
-      navigate(`/preview/${res.bill.id || res.bill.billNumber}`, { state: { bill: res.bill } });
-    } else {
-      setError(res.reason);
+      if (res.ok) {
+        draftStorage.clear();
+        navigate(`/preview/${res.bill.id || res.bill.billNumber}`, {
+          state: { bill: res.bill, from: 'new' },
+        });
+      } else {
+        setError(res.reason);
+      }
+    } finally {
+      // Always clears, even if something above throws unexpectedly —
+      // the button must never get stuck on "Saving…" with no way forward.
+      setSaving(false);
     }
   }
 
@@ -97,14 +104,6 @@ export default function NewBillPage({ branch }) {
             className="btn btn-primary btn-block"
             type="button"
             disabled={!readyToSave || saving}
-            onPointerDown={() => {
-              // Blur on touch-down (not click) so the keyboard collapses and
-              // the layout settles BEFORE the tap is released — otherwise the
-              // button can shift position mid-tap and swallow the first press.
-              if (document.activeElement instanceof HTMLElement) {
-                document.activeElement.blur();
-              }
-            }}
             onClick={handleSave}
           >
             {saving ? 'Saving…' : 'Save & Preview Slip'}
