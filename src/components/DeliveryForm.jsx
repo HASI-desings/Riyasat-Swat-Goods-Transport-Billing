@@ -112,7 +112,19 @@ export default function DeliveryForm({ presets, onSubmit, submitting }) {
         <textarea rows={2} value={d.notes} onChange={(e) => update('notes', e.target.value)} />
       </div>
 
-      <button className="btn btn-primary btn-block" type="button" disabled={!readyToSave || submitting} onClick={handleSubmit}>
+      <button
+        className="btn btn-primary btn-block"
+        type="button"
+        disabled={!readyToSave || submitting}
+        onPointerDown={() => {
+          // Fires BEFORE the click, early enough to beat the keyboard's
+          // dismiss gesture — the actual root cause of the double-tap bug.
+          if (document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
+          }
+        }}
+        onClick={handleSubmit}
+      >
         {submitting ? 'Saving…' : 'Add to Inventory'}
       </button>
     </div>
