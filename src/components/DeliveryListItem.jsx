@@ -1,13 +1,14 @@
 // A single delivery row for Inventory / History. Tapping it opens the
-// detail sheet; the Call button uses a tel: link, which on a phone
-// opens the dialer with the receiver's number pre-filled — one tap to
-// call, no manual dialing.
-import React, { useState } from 'react';
+// full receipt-style detail sheet (DeliverySlipTemplate) with a prominent
+// Call button — a real tel: link, so tapping it opens the phone's dialer
+// with the receiver's number already filled in.
+import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
-import { formatPKR } from '../lib/calculateTotal';
+import DeliverySlipTemplate from './DeliverySlipTemplate';
 
 export default function DeliveryListItem({ delivery, onMarkDelivered, onMarkPending }) {
   const [open, setOpen] = useState(false);
+  const slipRef = useRef(null);
 
   return (
     <>
@@ -34,37 +35,29 @@ export default function DeliveryListItem({ delivery, onMarkDelivered, onMarkPend
             animate={{ y: 0, opacity: 1 }}
             transition={{ type: 'spring', bounce: 0, duration: 0.35 }}
             onClick={(e) => e.stopPropagation()}
+            style={{ maxHeight: '88vh', overflowY: 'auto' }}
           >
-            <h2>{delivery.receiverName}</h2>
-            <div className="delivery-detail">
-              <div className="row"><span>Receiver Phone <span className="ur">/ نمبر</span></span><span>{delivery.receiverPhone}</span></div>
-              {delivery.senderName && <div className="row"><span>Sender <span className="ur">/ بھیجنے والا</span></span><span>{delivery.senderName}</span></div>}
-              {delivery.senderPhone && <div className="row"><span>Sender Phone</span><span>{delivery.senderPhone}</span></div>}
-              {delivery.originCity && <div className="row"><span>Origin City <span className="ur">/ شہر</span></span><span>{delivery.originCity}</span></div>}
-              {delivery.sourceCompany && <div className="row"><span>Sending Company</span><span>{delivery.sourceCompany}</span></div>}
-              {delivery.originalBillNumber && <div className="row"><span>Original Bilty #</span><span>{delivery.originalBillNumber}</span></div>}
-              <div className="row"><span>Substance <span className="ur">/ مال کی قسم</span></span><span>{delivery.substanceType}</span></div>
-              {delivery.weightOrVolume && <div className="row"><span>Weight / Volume</span><span>{delivery.weightOrVolume}</span></div>}
-              <div className="row"><span>Pieces <span className="ur">/ تعداد</span></span><span>{delivery.pieceCount}</span></div>
-              {delivery.amount && <div className="row"><span>Declared Amount</span><span>{formatPKR(delivery.amount)}</span></div>}
-              <div className="row"><span>Received <span className="ur">/ موصولہ تاریخ</span></span><span>{delivery.dateReceived}</span></div>
-              {delivery.notes && <div className="row"><span>Notes</span><span>{delivery.notes}</span></div>}
+            <div className="print-area">
+              <DeliverySlipTemplate ref={slipRef} delivery={delivery} />
             </div>
 
-            <div style={{ display: 'flex', gap: 10, marginTop: 16 }}>
+            <div style={{ display: 'flex', gap: 10, marginTop: 16, flexWrap: 'wrap' }}>
               <a
                 href={`tel:${delivery.receiverPhone.replace(/[^\d+]/g, '')}`}
                 className="btn btn-primary"
-                style={{ flex: 1, textDecoration: 'none' }}
+                style={{ flex: '1 1 45%', textDecoration: 'none' }}
               >
                 📞 Call Receiver
               </a>
+              <button className="btn btn-secondary" style={{ flex: '1 1 45%' }} onClick={() => window.print()}>
+                🖨 Print
+              </button>
               {delivery.status === 'pending' ? (
-                <button className="btn btn-secondary" style={{ flex: 1 }} onClick={() => { onMarkDelivered(delivery.id); setOpen(false); }}>
+                <button className="btn btn-secondary btn-block" onClick={() => { onMarkDelivered(delivery.id); setOpen(false); }}>
                   ✓ Mark Delivered
                 </button>
               ) : (
-                <button className="btn btn-ghost" style={{ flex: 1 }} onClick={() => { onMarkPending(delivery.id); setOpen(false); }}>
+                <button className="btn btn-ghost btn-block" onClick={() => { onMarkPending(delivery.id); setOpen(false); }}>
                   Undo
                 </button>
               )}
