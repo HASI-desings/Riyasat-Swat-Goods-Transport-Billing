@@ -104,6 +104,13 @@ export default function NewBillPage({ branch }) {
             className="btn btn-primary btn-block"
             type="button"
             disabled={!readyToSave || saving}
+            onPointerDown={() => {
+              // Fires BEFORE the click, early enough to beat the keyboard's
+              // dismiss gesture — the actual root cause of the double-tap bug.
+              if (document.activeElement instanceof HTMLElement) {
+                document.activeElement.blur();
+              }
+            }}
             onClick={handleSave}
           >
             {saving ? 'Saving…' : 'Save & Preview Slip'}
