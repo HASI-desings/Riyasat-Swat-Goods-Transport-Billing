@@ -1,7 +1,7 @@
 // Screen 1 — main screen, form + live preview side-by-side (desktop) or
 // stacked (mobile). Blocks bill creation until a branch is selected on
 // this device (rules.md #4a).
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 import { motion } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import BillForm, { emptyBill } from '../components/BillForm';
@@ -20,6 +20,7 @@ export default function NewBillPage({ branch }) {
   const [calc, setCalc] = useState(null);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState(null);
+  const handledRef = useRef(false);
 
   const readyToSave =
     branch && bill.senderName && bill.receiverName && bill.destination &&
@@ -29,19 +30,28 @@ export default function NewBillPage({ branch }) {
     await addCustomer({ name, defaultDestination: bill.destination });
   }
 
-  async function handleSave() {
-    // On mobile, tapping Save while a text field is still focused can just
-    // dismiss the keyboard on the first tap (the click never fires) — the
-    // page then looks like it "loaded and stopped" until a second tap.
-    // Blurring any focused field first means one tap reliably saves.
+  async function handleSave(e) {
+    // Guard against touchend + click both firing for the same tap.
+    if (e) e.preventDefault();
+    if (handledRef.current || saving) return;
+    handledRef.current = true;
+
+    // The button is intentionally NEVER disabled (see button below) — a
+    // disabled element receives no touch/pointer events at all, which is
+    // what caused the double-tap bug: the first tap on a disabled button
+    // does nothing but blur the keyboard, and only the resulting re-render
+    // enables the button for a second tap to actually work. Validating
+    // here instead keeps every tap "live".
+    if (!readyToSave) {
+      setError(!branch ? 'Select a branch first (see the picker, or go to Settings).' : 'Fill in all required fields first.');
+      handledRef.current = false;
+      return;
+    }
+
     if (document.activeElement instanceof HTMLElement) {
       document.activeElement.blur();
     }
 
-    if (!branch) {
-      setError('Select a branch first (see the picker, or go to Settings).');
-      return;
-    }
     setSaving(true);
     setError(null);
 
@@ -64,6 +74,7 @@ export default function NewBillPage({ branch }) {
       // Always clears, even if something above throws unexpectedly —
       // the button must never get stuck on "Saving…" with no way forward.
       setSaving(false);
+      handledRef.current = false;
     }
   }
 
@@ -103,14 +114,8 @@ export default function NewBillPage({ branch }) {
           <button
             className="btn btn-primary btn-block"
             type="button"
-            disabled={!readyToSave || saving}
-            onPointerDown={() => {
-              // Fires BEFORE the click, early enough to beat the keyboard's
-              // dismiss gesture — the actual root cause of the double-tap bug.
-              if (document.activeElement instanceof HTMLElement) {
-                document.activeElement.blur();
-              }
-            }}
+            style={{ opacity: saving ? 0.7 : 1 }}
+            onTouchEnd={handleSave}
             onClick={handleSave}
           >
             {saving ? 'Saving…' : 'Save & Preview Slip'}
