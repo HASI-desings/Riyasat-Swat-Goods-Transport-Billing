@@ -55,10 +55,16 @@ export default function SlipPreviewPage() {
   if (error) return <div className="banner banner-error">{error}</div>;
   if (!bill) return null;
 
+  // Remember where we came from so the back link returns there — history
+  // shouldn't force a detour through New Bill just to get back to itself.
+  const cameFromHistory = location.state?.from === 'history';
+  const backTo = cameFromHistory ? '/history' : '/';
+  const backLabel = cameFromHistory ? '← Bill History' : '← New Bill';
+
   return (
     <motion.div initial={{ opacity: 0, y: 8 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }}>
       <div style={{ marginBottom: 14 }}>
-        <Link to="/" className="btn btn-ghost" style={{ padding: 0 }}>← New Bill</Link>
+        <Link to={backTo} className="btn btn-ghost" style={{ padding: 0 }}>{backLabel}</Link>
       </div>
 
       <div className="print-area">
