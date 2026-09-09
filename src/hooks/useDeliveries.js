@@ -19,7 +19,9 @@ function toRow(d) {
     substance_type: d.substanceType,
     weight_or_volume: d.weightOrVolume || null,
     piece_count: d.pieceCount,
-    amount: d.amount || null,
+    cost: d.cost || null,
+    godam_charges: d.godamCharges || null,
+    labour_cost: d.labourCost || null,
     notes: d.notes || null,
   };
 }
@@ -38,7 +40,9 @@ function fromRow(row) {
     substanceType: row.substance_type,
     weightOrVolume: row.weight_or_volume,
     pieceCount: row.piece_count,
-    amount: row.amount,
+    cost: row.cost,
+    godamCharges: row.godam_charges,
+    labourCost: row.labour_cost,
     notes: row.notes,
     status: row.status,
     deliveredAt: row.delivered_at,
