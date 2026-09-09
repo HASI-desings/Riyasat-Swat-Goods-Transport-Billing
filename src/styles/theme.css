@@ -337,3 +337,80 @@ button, .tap-target { min-height: 44px; }
   .split-layout { grid-template-columns: 1fr 1fr; align-items: start; }
   .split-layout .sticky-col { position: sticky; top: 84px; }
 }
+
+/* --- Receiving module: sub-tabs, status badges, detail rows --- */
+
+.sub-tab-bar {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 16px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.sub-tab {
+  flex: 1;
+  white-space: nowrap;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  background: var(--navy-800);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: var(--slate-300);
+  font-size: 0.8rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: background var(--dur-fast) var(--ease-out-quick),
+    color var(--dur-fast) var(--ease-out-quick);
+}
+
+.sub-tab.active {
+  background: linear-gradient(180deg, var(--amber-500), var(--amber-600));
+  color: var(--navy-950);
+  border-color: transparent;
+}
+
+.sub-tab-count {
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 999px;
+  padding: 1px 7px;
+  font-size: 0.68rem;
+}
+
+.status-badge {
+  font-size: 0.68rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 999px;
+  white-space: nowrap;
+}
+
+.status-badge.status-pending {
+  background: rgba(224, 138, 46, 0.18);
+  color: var(--amber-400);
+}
+
+.status-badge.status-delivered {
+  background: rgba(46, 125, 91, 0.2);
+  color: #6fdcae;
+}
+
+.delivery-detail {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.85rem;
+  margin: 12px 0;
+}
+
+.delivery-detail .row {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+}
+
+.delivery-detail .row:last-child { border-bottom: none; padding-bottom: 0; }
